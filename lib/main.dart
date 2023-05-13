@@ -1,27 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutterx/blocs/counter/counter_bloc.dart';
-import 'package:flutterx/blocs/theme/theme_cubit.dart';
+import 'package:flutterx/blocs/app/app_cubit.dart';
 
 void main() {
-  Bloc.observer = const AppBlocObserver();
+  // Bloc.observer = const AppBlocObserver();
   runApp(const App());
-}
-
-class AppBlocObserver extends BlocObserver {
-  const AppBlocObserver();
-
-  @override
-  void onChange(BlocBase bloc, Change change) {
-    super.onChange(bloc, change);
-    if (bloc is Cubit) print(change);
-  }
-
-  @override
-  void onTransition(Bloc bloc, Transition transition) {
-    super.onTransition(bloc, transition);
-    print(transition);
-  }
 }
 
 class App extends StatelessWidget {
@@ -30,15 +13,12 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => ThemeCubit(),
-      child: BlocBuilder<ThemeCubit, ThemeData>(
+      create: (_) => AppCubit(),
+      child: BlocBuilder<AppCubit, AppCubitState>(
         builder: (_, theme) {
           return MaterialApp(
-            theme: theme,
-            home: BlocProvider(
-              create: (_) => CounterBloc(),
-              child: const CounterView(),
-            ),
+            theme: theme.themeData,
+            home: const CounterView(),
           );
         },
       ),
@@ -56,10 +36,10 @@ class CounterView extends StatelessWidget {
         title: const Text('Counter'),
       ),
       body: Center(
-        child: BlocBuilder<CounterBloc, int>(
-          builder: (context, count) {
+        child: BlocBuilder<AppCubit, AppCubitState>(
+          builder: (context, state) {
             return Text(
-              '$count',
+              '${state.counter}',
               style: Theme.of(context).textTheme.displayLarge,
             );
           },
@@ -72,21 +52,21 @@ class CounterView extends StatelessWidget {
           FloatingActionButton(
             child: const Icon(Icons.add),
             onPressed: () {
-              context.read<CounterBloc>().add(CounterIncrementPressed());
+              context.read<AppCubit>().incrementCounter();
             },
           ),
           const SizedBox(height: 4),
           FloatingActionButton(
             child: const Icon(Icons.remove),
             onPressed: () {
-              context.read<CounterBloc>().add(CounterDecrementPressed());
+              context.read<AppCubit>().decrementCounter();
             },
           ),
           const SizedBox(height: 4),
           FloatingActionButton(
             child: const Icon(Icons.brightness_6),
             onPressed: () {
-              context.read<ThemeCubit>().toggleTheme();
+              context.read<AppCubit>().toggleTheme();
             },
           ),
         ],
