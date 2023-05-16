@@ -37,18 +37,6 @@ class AppState extends Equatable {
   List<Object?> get props => [isAuthenticated, email, name, counter];
 }
 
-// Buat sebuah event untuk mengubah status autentikasi
-abstract class AppEvent {}
-
-class LoginEvent extends AppEvent {
-  final String email;
-  final String password;
-
-  LoginEvent({required this.email, required this.password});
-}
-
-class LogoutEvent extends AppEvent {}
-
 // Buat sebuah cubit yang akan menangani state management untuk AppState
 class AppCubit extends HydratedCubit<AppState> {
   AppCubit()
