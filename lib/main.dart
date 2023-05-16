@@ -39,51 +39,70 @@ class AuthScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final appCubAppCubit = BlocProvider.of<AppCubit>(context);
+    final appCubit = BlocProvider.of<AppCubit>(context);
+
+    void authenticateUser() {
+      if (appCubit.state.isAuthenticated) {
+        appCubit.logout();
+      } else {
+        appCubit.login('example@example.com', 'John Doe');
+      }
+    }
 
     return BlocBuilder<AppCubit, AppState>(
-      builder: (context, state) {
-        if (state.isAuthenticated) {
-          // Jika sudah terautentikasi, tampilkan informasi pengguna
-          return Scaffold(
-            appBar: AppBar(
-              title: const Text('Auth Screen'),
-            ),
-            body: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
+      builder: (_, state) {
+        return Scaffold(
+          appBar: AppBar(
+            title: const Text('Main Screen'),
+          ),
+          floatingActionButton: Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: <Widget>[
+              if (state.isAuthenticated) ...[
+                FloatingActionButton(
+                  child: const Icon(Icons.add),
+                  onPressed: () => appCubit.incrementCounter(),
+                ),
+                const SizedBox(height: 4),
+                FloatingActionButton(
+                  child: const Icon(Icons.remove),
+                  onPressed: () => appCubit.decrementCounter(),
+                ),
+                const SizedBox(height: 4),
+              ],
+              FloatingActionButton(
+                onPressed: authenticateUser,
+                child: state.isAuthenticated
+                    ? const Icon(Icons.logout)
+                    : const Icon(Icons.login),
+              ),
+            ],
+          ),
+          body: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                if (state.isAuthenticated) ...[
+                  Text(
+                    '${state.counter}',
+                    style: Theme.of(context).textTheme.displayLarge,
+                  ),
                   Text('Email: ${state.email}'),
                   Text('Name: ${state.name}'),
-                  Text('Age: ${state.age}'),
-                  ElevatedButton(
-                    onPressed: () {
-                      // Lakukan logout
-                      appCubAppCubit.logout();
-                    },
-                    child: const Text('Logout'),
+                ] else ...[
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 40),
+                    child: Text(
+                      'You are not authenticated, please\nclick login button below',
+                      textAlign: TextAlign.center,
+                    ),
                   ),
-                ],
-              ),
+                ]
+              ],
             ),
-          );
-        } else {
-          // Jika belum terautentikasi, tampilkan form login
-          return Scaffold(
-            appBar: AppBar(
-              title: const Text('Auth Screen'),
-            ),
-            body: Center(
-              child: ElevatedButton(
-                onPressed: () {
-                  // Lakukan login dengan email dan password
-                  appCubAppCubit.login('example@example.com', 'password');
-                },
-                child: const Text('Login'),
-              ),
-            ),
-          );
-        }
+          ),
+        );
       },
     );
   }

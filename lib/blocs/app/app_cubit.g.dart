@@ -10,12 +10,12 @@ AppState _$AppStateFromJson(Map<String, dynamic> json) => AppState(
       isAuthenticated: json['isAuthenticated'] as bool,
       email: json['email'] as String,
       name: json['name'] as String,
-      age: json['age'] as int,
+      counter: json['counter'] as int,
     );
 
 Map<String, dynamic> _$AppStateToJson(AppState instance) => <String, dynamic>{
       'isAuthenticated': instance.isAuthenticated,
       'email': instance.email,
       'name': instance.name,
-      'age': instance.age,
+      'counter': instance.counter,
     };

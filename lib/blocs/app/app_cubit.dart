@@ -10,31 +10,31 @@ class AppState extends Equatable {
   final bool isAuthenticated;
   final String email;
   final String name;
-  final int age;
+  final int counter;
 
   const AppState({
     required this.isAuthenticated,
     required this.email,
     required this.name,
-    required this.age,
+    required this.counter,
   });
 
   AppState copyWith({
     bool? isAuthenticated,
     String? email,
     String? name,
-    int? age,
+    int? counter,
   }) {
     return AppState(
       isAuthenticated: isAuthenticated ?? this.isAuthenticated,
       email: email ?? this.email,
       name: name ?? this.name,
-      age: age ?? this.age,
+      counter: counter ?? this.counter,
     );
   }
 
   @override
-  List<Object?> get props => [isAuthenticated, email, name, age];
+  List<Object?> get props => [isAuthenticated, email, name, counter];
 }
 
 // Buat sebuah event untuk mengubah status autentikasi
@@ -56,7 +56,7 @@ class AppCubit extends HydratedCubit<AppState> {
           isAuthenticated: false,
           email: '',
           name: '',
-          age: 0,
+          counter: 0,
         ));
 
   @override
@@ -65,16 +65,14 @@ class AppCubit extends HydratedCubit<AppState> {
   @override
   Map<String, dynamic> toJson(AppState state) => _$AppStateToJson(state);
 
-  // Metode untuk melakukan login dengan email dan password
-  void login(String email, String password) {
-    // Lakukan proses autentikasi
-    // Jika autentikasi berhasil, ubah state isAuthenticated menjadi true
-    // Jika autentikasi gagal, biarkan state isAuthenticated menjadi false
-    bool isAuthenticated = true; // contoh autentikasi berhasil
+  void login(String email, String name) {
+    bool isAuthenticated = true;
+
     if (isAuthenticated) {
       emit(state.copyWith(
         isAuthenticated: true,
         email: email,
+        name: name,
       ));
     }
   }
@@ -85,7 +83,19 @@ class AppCubit extends HydratedCubit<AppState> {
       isAuthenticated: false,
       email: '',
       name: '',
-      age: 0,
+      counter: 0,
+    ));
+  }
+
+  void incrementCounter() {
+    emit(state.copyWith(
+      counter: state.counter + 1,
+    ));
+  }
+
+  void decrementCounter() {
+    emit(state.copyWith(
+      counter: state.counter - 1,
     ));
   }
 }
