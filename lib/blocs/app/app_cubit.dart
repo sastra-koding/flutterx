@@ -1,60 +1,97 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hydrated_bloc/hydrated_bloc.dart';
 
-class AppCubit extends Cubit<AppCubitState> {
-  AppCubit() : super(AppCubitState.light());
+// Buat sebuah state untuk menyimpan informasi autentikasi
+class AuthState {
+  final bool isAuthenticated;
+  final String email;
+  final String name;
+  final int age;
 
-  void toggleTheme() {
-    emit(state.brightness == Brightness.dark ? AppCubitState.light() : AppCubitState.dark());
-  }
+  AuthState({
+    required this.isAuthenticated,
+    required this.email,
+    required this.name,
+    required this.age,
+  });
 
-  void incrementCounter() {
-    emit(state.copyWith(counter: state.counter + 1));
-  }
-
-  void decrementCounter() {
-    emit(state.copyWith(counter: state.counter - 1));
+  AuthState copyWith({
+    bool? isAuthenticated,
+    String? email,
+    String? name,
+    int? age,
+  }) {
+    return AuthState(
+      isAuthenticated: isAuthenticated ?? this.isAuthenticated,
+      email: email ?? this.email,
+      name: name ?? this.name,
+      age: age ?? this.age,
+    );
   }
 }
 
-class AppCubitState {
-  final ThemeData themeData;
-  final Brightness brightness;
-  final int counter;
+// Buat sebuah event untuk mengubah status autentikasi
+abstract class AuthEvent {}
 
-  AppCubitState._({required this.themeData, required this.brightness, required this.counter});
+class LoginEvent extends AuthEvent {
+  final String email;
+  final String password;
 
-  factory AppCubitState.light() {
-    return AppCubitState._(
-      themeData: ThemeData(
-        floatingActionButtonTheme: const FloatingActionButtonThemeData(
-          foregroundColor: Colors.white,
-        ),
-        brightness: Brightness.light,
-      ),
-      brightness: Brightness.light,
-      counter: 0,
+  LoginEvent({required this.email, required this.password});
+}
+
+class LogoutEvent extends AuthEvent {}
+
+// Buat sebuah cubit yang akan menangani state management untuk AuthState
+class AuthCubit extends HydratedCubit<AuthState> {
+  AuthCubit()
+      : super(AuthState(
+          isAuthenticated: false,
+          email: '',
+          name: '',
+          age: 0,
+        ));
+
+  @override
+  AuthState fromJson(Map<String, dynamic> json) {
+    return AuthState(
+      isAuthenticated: json['isAuthenticated'] as bool,
+      email: json['email'] as String,
+      name: json['name'] as String,
+      age: json['age'] as int,
     );
   }
 
-  factory AppCubitState.dark() {
-    return AppCubitState._(
-      themeData: ThemeData(
-        floatingActionButtonTheme: const FloatingActionButtonThemeData(
-          foregroundColor: Colors.black,
-        ),
-        brightness: Brightness.dark,
-      ),
-      brightness: Brightness.dark,
-      counter: 0,
-    );
+  @override
+  Map<String, dynamic> toJson(AuthState state) {
+    return {
+      'isAuthenticated': state.isAuthenticated,
+      'email': state.email,
+      'name': state.name,
+      'age': state.age,
+    };
   }
 
-  AppCubitState copyWith({ThemeData? themeData, Brightness? brightness, int? counter}) {
-    return AppCubitState._(
-      themeData: themeData ?? this.themeData,
-      brightness: brightness ?? this.brightness,
-      counter: counter ?? this.counter,
-    );
+  // Metode untuk melakukan login dengan email dan password
+  void login(String email, String password) {
+    // Lakukan proses autentikasi
+    // Jika autentikasi berhasil, ubah state isAuthenticated menjadi true
+    // Jika autentikasi gagal, biarkan state isAuthenticated menjadi false
+    bool isAuthenticated = true; // contoh autentikasi berhasil
+    if (isAuthenticated) {
+      emit(state.copyWith(
+        isAuthenticated: true,
+        email: email,
+      ));
+    }
+  }
+
+  // Metode untuk melakukan logout
+  void logout() {
+    emit(state.copyWith(
+      isAuthenticated: false,
+      email: '',
+      name: '',
+      age: 0,
+    ));
   }
 }

@@ -1,76 +1,90 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutterx/blocs/app/app_cubit.dart';
+import 'package:hydrated_bloc/hydrated_bloc.dart';
+import 'package:path_provider/path_provider.dart';
 
-void main() {
-  // Bloc.observer = const AppBlocObserver();
-  runApp(const App());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  try {
+    HydratedBloc.storage = await HydratedStorage.build(
+      storageDirectory: await getTemporaryDirectory(),
+    );
+  } catch (e) {
+    // Jika gagal membuat storage, aplikasi akan tetap berjalan
+  }
+  runApp(const MyApp());
 }
 
-class App extends StatelessWidget {
-  const App({super.key});
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => AppCubit(),
-      child: BlocBuilder<AppCubit, AppCubitState>(
-        builder: (_, theme) {
-          return MaterialApp(
-            theme: theme.themeData,
-            home: const CounterView(),
-          );
-        },
+    return MaterialApp(
+      title: 'Flutter Demo',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: BlocProvider(
+        create: (context) => AuthCubit(),
+        child: const AuthScreen(),
       ),
     );
   }
 }
 
-class CounterView extends StatelessWidget {
-  const CounterView({super.key});
+class AuthScreen extends StatelessWidget {
+  const AuthScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Counter'),
-      ),
-      body: Center(
-        child: BlocBuilder<AppCubit, AppCubitState>(
-          builder: (context, state) {
-            return Text(
-              '${state.counter}',
-              style: Theme.of(context).textTheme.displayLarge,
-            );
-          },
-        ),
-      ),
-      floatingActionButton: Column(
-        crossAxisAlignment: CrossAxisAlignment.end,
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: <Widget>[
-          FloatingActionButton(
-            child: const Icon(Icons.add),
-            onPressed: () {
-              context.read<AppCubit>().incrementCounter();
-            },
-          ),
-          const SizedBox(height: 4),
-          FloatingActionButton(
-            child: const Icon(Icons.remove),
-            onPressed: () {
-              context.read<AppCubit>().decrementCounter();
-            },
-          ),
-          const SizedBox(height: 4),
-          FloatingActionButton(
-            child: const Icon(Icons.brightness_6),
-            onPressed: () {
-              context.read<AppCubit>().toggleTheme();
-            },
-          ),
-        ],
-      ),
+    final authCubit = BlocProvider.of<AuthCubit>(context);
+
+    return BlocBuilder<AuthCubit, AuthState>(
+      builder: (context, state) {
+        if (state.isAuthenticated) {
+          // Jika sudah terautentikasi, tampilkan informasi pengguna
+          return Scaffold(
+            appBar: AppBar(
+              title: const Text('Auth Screen'),
+            ),
+            body: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text('Email: ${state.email}'),
+                  Text('Name: ${state.name}'),
+                  Text('Age: ${state.age}'),
+                  ElevatedButton(
+                    onPressed: () {
+                      // Lakukan logout
+                      authCubit.logout();
+                    },
+                    child: const Text('Logout'),
+                  ),
+                ],
+              ),
+            ),
+          );
+        } else {
+          // Jika belum terautentikasi, tampilkan form login
+          return Scaffold(
+            appBar: AppBar(
+              title: const Text('Auth Screen'),
+            ),
+            body: Center(
+              child: ElevatedButton(
+                onPressed: () {
+                  // Lakukan login dengan email dan password
+                  authCubit.login('example@example.com', 'password');
+                },
+                child: const Text('Login'),
+              ),
+            ),
+          );
+        }
+      },
     );
   }
 }
