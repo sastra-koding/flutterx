@@ -1,26 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutterx/store/cubits/app/app_cubit.dart';
+import 'package:flutterx/store/blocs/app/app_bloc.dart';
 
-class CubitScreen extends StatelessWidget {
-  const CubitScreen({super.key});
+class BlocScreen extends StatelessWidget {
+  const BlocScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final appCubit = BlocProvider.of<AppCubit>(context);
+    final appBloc = BlocProvider.of<AppBloc>(context);
 
     void authenticateUser() {
-      if (appCubit.state.isAuthenticated) {
-        appCubit.logout();
+      if (appBloc.state.isAuthenticated) {
+        appBloc.add(LogoutEvent());
       } else {
-        appCubit.login('example@example.com', 'John Doe');
+        appBloc.add(
+          const LoginEvent(email: 'example@example.com', name: 'John Doe'),
+        );
       }
     }
 
-    return BlocBuilder<AppCubit, AppState>(
+    return BlocBuilder<AppBloc, AppState>(
       builder: (context, state) {
         return Scaffold(
-          appBar: AppBar(title: const Text('Cubit Screen')),
+          appBar: AppBar(title: const Text('Bloc Screen')),
           floatingActionButton: Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             mainAxisAlignment: MainAxisAlignment.end,
@@ -29,13 +31,13 @@ class CubitScreen extends StatelessWidget {
                 FloatingActionButton(
                   heroTag: 'increment',
                   child: const Icon(Icons.add),
-                  onPressed: () => appCubit.incrementCounter(),
+                  onPressed: () => appBloc.add(IncrementCounterEvent()),
                 ),
                 const SizedBox(height: 4),
                 FloatingActionButton(
                   heroTag: 'decrement',
                   child: const Icon(Icons.remove),
-                  onPressed: () => appCubit.decrementCounter(),
+                  onPressed: () => appBloc.add(DecrementCounterEvent()),
                 ),
                 const SizedBox(height: 4),
               ],
@@ -55,7 +57,7 @@ class CubitScreen extends StatelessWidget {
               children: [
                 if (state.isAuthenticated) ...[
                   const Text(
-                    'All state on this screen is managed and persisted by the cubit',
+                    'All state on this screen is managed and persisted by the bloc',
                     textAlign: TextAlign.center,
                   ),
                   Text(
