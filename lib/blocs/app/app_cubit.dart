@@ -1,50 +1,58 @@
+import 'package:equatable/equatable.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
+import 'package:json_annotation/json_annotation.dart';
+
+part 'app_cubit.g.dart';
 
 // Buat sebuah state untuk menyimpan informasi autentikasi
-class AuthState {
+@JsonSerializable()
+class AppState extends Equatable {
   final bool isAuthenticated;
   final String email;
   final String name;
   final int age;
 
-  AuthState({
+  const AppState({
     required this.isAuthenticated,
     required this.email,
     required this.name,
     required this.age,
   });
 
-  AuthState copyWith({
+  AppState copyWith({
     bool? isAuthenticated,
     String? email,
     String? name,
     int? age,
   }) {
-    return AuthState(
+    return AppState(
       isAuthenticated: isAuthenticated ?? this.isAuthenticated,
       email: email ?? this.email,
       name: name ?? this.name,
       age: age ?? this.age,
     );
   }
+
+  @override
+  List<Object?> get props => [isAuthenticated, email, name, age];
 }
 
 // Buat sebuah event untuk mengubah status autentikasi
-abstract class AuthEvent {}
+abstract class AppEvent {}
 
-class LoginEvent extends AuthEvent {
+class LoginEvent extends AppEvent {
   final String email;
   final String password;
 
   LoginEvent({required this.email, required this.password});
 }
 
-class LogoutEvent extends AuthEvent {}
+class LogoutEvent extends AppEvent {}
 
-// Buat sebuah cubit yang akan menangani state management untuk AuthState
-class AuthCubit extends HydratedCubit<AuthState> {
-  AuthCubit()
-      : super(AuthState(
+// Buat sebuah cubit yang akan menangani state management untuk AppState
+class AppCubit extends HydratedCubit<AppState> {
+  AppCubit()
+      : super(const AppState(
           isAuthenticated: false,
           email: '',
           name: '',
@@ -52,24 +60,10 @@ class AuthCubit extends HydratedCubit<AuthState> {
         ));
 
   @override
-  AuthState fromJson(Map<String, dynamic> json) {
-    return AuthState(
-      isAuthenticated: json['isAuthenticated'] as bool,
-      email: json['email'] as String,
-      name: json['name'] as String,
-      age: json['age'] as int,
-    );
-  }
+  AppState fromJson(Map<String, dynamic> json) => _$AppStateFromJson(json);
 
   @override
-  Map<String, dynamic> toJson(AuthState state) {
-    return {
-      'isAuthenticated': state.isAuthenticated,
-      'email': state.email,
-      'name': state.name,
-      'age': state.age,
-    };
-  }
+  Map<String, dynamic> toJson(AppState state) => _$AppStateToJson(state);
 
   // Metode untuk melakukan login dengan email dan password
   void login(String email, String password) {

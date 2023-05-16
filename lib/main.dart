@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       home: BlocProvider(
-        create: (context) => AuthCubit(),
+        create: (context) => AppCubit(),
         child: const AuthScreen(),
       ),
     );
@@ -39,9 +39,9 @@ class AuthScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final authCubit = BlocProvider.of<AuthCubit>(context);
+    final appCubAppCubit = BlocProvider.of<AppCubit>(context);
 
-    return BlocBuilder<AuthCubit, AuthState>(
+    return BlocBuilder<AppCubit, AppState>(
       builder: (context, state) {
         if (state.isAuthenticated) {
           // Jika sudah terautentikasi, tampilkan informasi pengguna
@@ -59,7 +59,7 @@ class AuthScreen extends StatelessWidget {
                   ElevatedButton(
                     onPressed: () {
                       // Lakukan logout
-                      authCubit.logout();
+                      appCubAppCubit.logout();
                     },
                     child: const Text('Logout'),
                   ),
@@ -77,7 +77,7 @@ class AuthScreen extends StatelessWidget {
               child: ElevatedButton(
                 onPressed: () {
                   // Lakukan login dengan email dan password
-                  authCubit.login('example@example.com', 'password');
+                  appCubAppCubit.login('example@example.com', 'password');
                 },
                 child: const Text('Login'),
               ),
