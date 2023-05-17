@@ -10,7 +10,7 @@ class MainState extends Equatable {
   final String locale;
 
   const MainState({
-    required this.locale,
+    this.locale = 'en',
   });
 
   MainState copyWith({
@@ -37,16 +37,6 @@ class MainCubit extends HydratedCubit<MainState> {
 
   @override
   Map<String, dynamic> toJson(MainState state) => _$MainStateToJson(state);
-
-  void login(String locale, String name) {
-    bool isAuthenticated = true;
-
-    if (isAuthenticated) {
-      emit(state.copyWith(
-        locale: locale,
-      ));
-    }
-  }
 
   // Metode untuk melakukan logout
   void setLocale(String locale) {

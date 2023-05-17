@@ -1,0 +1,13 @@
+{
+  "main_screen_title": "Main Screen",
+  "main_screen_cubit_button": "Go to Cubit Screen",
+  "main_screen_bloc_button": "Go to BLoC Screen",
+  "cubit_screen_title": "Cubit Screen",
+  "cubit_screen_alert": "All state on this screen is managed and persisted by the cubit",
+  "cubit_screen_name": "Name",
+  "cubit_screen_login_alert": "You are not authenticated, please\nclick login button below",
+  "bloc_screen_title": "BLoC Screen",
+  "bloc_screen_alert": "All state on this screen is managed and persisted by the BLoC",
+  "bloc_screen_name": "Name",
+  "bloc_screen_login_alert": "You are not authenticated, please\nclick login button below"
+}

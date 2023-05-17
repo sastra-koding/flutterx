@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutterx/assets/helpers.dart';
 import 'package:flutterx/store/cubits/app/app_cubit.dart';
 
 class CubitScreen extends StatelessWidget {
@@ -20,7 +21,7 @@ class CubitScreen extends StatelessWidget {
     return BlocBuilder<AppCubit, AppState>(
       builder: (context, state) {
         return Scaffold(
-          appBar: AppBar(title: const Text('Cubit Screen')),
+          appBar: AppBar(title: Text(t(context, 'cubit_screen_title'))),
           floatingActionButton: Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             mainAxisAlignment: MainAxisAlignment.end,
@@ -54,8 +55,8 @@ class CubitScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 if (state.isAuthenticated) ...[
-                  const Text(
-                    'All state on this screen is managed and persisted by the cubit',
+                  Text(
+                    t(context, 'cubit_screen_alert'),
                     textAlign: TextAlign.center,
                   ),
                   Text(
@@ -63,12 +64,12 @@ class CubitScreen extends StatelessWidget {
                     style: Theme.of(context).textTheme.displayLarge,
                   ),
                   Text('Email: ${state.email}'),
-                  Text('Name: ${state.name}'),
+                  Text('${t(context, "cubit_screen_name")}: ${state.name}'),
                 ] else ...[
-                  const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 40),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 40),
                     child: Text(
-                      'You are not authenticated, please\nclick login button below',
+                      t(context, 'cubit_screen_login_alert'),
                       textAlign: TextAlign.center,
                     ),
                   ),

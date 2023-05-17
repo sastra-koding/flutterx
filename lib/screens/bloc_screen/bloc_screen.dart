@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutterx/assets/helpers.dart';
 import 'package:flutterx/store/blocs/app/app_bloc.dart';
 
 class BlocScreen extends StatelessWidget {
@@ -22,7 +23,7 @@ class BlocScreen extends StatelessWidget {
     return BlocBuilder<AppBloc, AppState>(
       builder: (context, state) {
         return Scaffold(
-          appBar: AppBar(title: const Text('Bloc Screen')),
+          appBar: AppBar(title: Text(t(context, 'bloc_screen_title'))),
           floatingActionButton: Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             mainAxisAlignment: MainAxisAlignment.end,
@@ -56,8 +57,8 @@ class BlocScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 if (state.isAuthenticated) ...[
-                  const Text(
-                    'All state on this screen is managed and persisted by the bloc',
+                  Text(
+                    t(context, 'bloc_screen_alert'),
                     textAlign: TextAlign.center,
                   ),
                   Text(
@@ -65,12 +66,12 @@ class BlocScreen extends StatelessWidget {
                     style: Theme.of(context).textTheme.displayLarge,
                   ),
                   Text('Email: ${state.email}'),
-                  Text('Name: ${state.name}'),
+                  Text('${t(context, 'bloc_screen_name')}: ${state.name}'),
                 ] else ...[
-                  const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 40),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 40),
                     child: Text(
-                      'You are not authenticated, please\nclick login button below',
+                      t(context, 'bloc_screen_login_alert'),
                       textAlign: TextAlign.center,
                     ),
                   ),

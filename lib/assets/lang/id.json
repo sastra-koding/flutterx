@@ -1,0 +1,13 @@
+{
+  "main_screen_title": "Halaman Utama",
+  "main_screen_cubit_button": "Ke Halaman Cubit",
+  "main_screen_bloc_button": "Ke Halaman BLoC",
+  "cubit_screen_title": "Halaman Cubit",
+  "cubit_screen_alert": "Semua state di halaman ini dikelola dan disimpan di dalam Cubit",
+  "cubit_screen_name": "Nama",
+  "cubit_screen_login_alert": "Kamu belum login, silakan\nklik tombol login untuk melanjutkan",
+  "bloc_screen_title": "Halaman BLoC",
+  "bloc_screen_alert": "Semua state di halaman ini dikelola dan disimpan di dalam BLoC",
+  "bloc_screen_name": "Nama",
+  "bloc_screen_login_alert": "Kamu belum login, silakan\nklik tombol login untuk melanjutkan"
+}
