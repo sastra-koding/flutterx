@@ -29,27 +29,29 @@ class App extends StatelessWidget {
     return MultiBlocProvider(
       providers: providers,
       child: BlocBuilder<MainCubit, MainState>(
-        builder: (context, state) => MaterialApp(
-          title: 'Flutter Demo',
-          locale: const Locale('en'),
-          supportedLocales: const [
-            Locale('en', ''),
-            Locale('id', ''),
-          ],
-          localizationsDelegates: const [
-            AppLocalizations.delegate,
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-          ],
-          theme: ThemeData(
-            primarySwatch: Colors.deepPurple,
-          ),
-          routes: {
-            '/cubit': (context) => const CubitScreen(),
-            '/bloc': (context) => const BlocScreen(),
-          },
-          home: const MainScreen(),
-        ),
+        builder: (context, state) {
+          return MaterialApp(
+            locale: Locale(state.locale!),
+            supportedLocales: const [
+              Locale('en', ''),
+              Locale('id', ''),
+            ],
+            localizationsDelegates: const [
+              AppLocalizations.delegate,
+              GlobalMaterialLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+            ],
+            theme: ThemeData(
+              primarySwatch: Colors.deepPurple,
+            ),
+            routes: {
+              '/cubit': (context) => const CubitScreen(),
+              '/bloc': (context) => const BlocScreen(),
+            },
+            home: const MainScreen(),
+          );
+        }
       ),
     );
   }

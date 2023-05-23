@@ -7,19 +7,18 @@ part 'main_cubit.g.dart';
 // Buat sebuah state untuk menyimpan informasi autentikasi
 @JsonSerializable()
 class MainState extends Equatable {
-  final String locale;
+  final String? locale;
 
   const MainState({
-    this.locale = 'en',
+    this.locale,
   });
 
   MainState copyWith({
     String? locale,
-  }) {
-    return MainState(
-      locale: locale ?? this.locale,
-    );
-  }
+  }) =>
+      MainState(
+        locale: locale ?? this.locale,
+      );
 
   @override
   List<Object?> get props => [locale];
@@ -29,7 +28,7 @@ class MainState extends Equatable {
 class MainCubit extends HydratedCubit<MainState> {
   MainCubit()
       : super(const MainState(
-          locale: '',
+          locale: 'en',
         ));
 
   @override
